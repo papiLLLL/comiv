@@ -1,0 +1,7 @@
+# Ruby
+/.bundle/
+/Gemfile.lock
+/vendor/
+
+# compv
+config.yml
