@@ -1,7 +1,7 @@
 require "tinify"
 
 module Tinify
-  Tinify.key = "L_nb7B7m7qiURVttmeUTID96hxHUeLg0"
+  Tinify.key = "XXXXX"
   COMPRESS_DIR = "compress"
 
   def compress_image(image)
