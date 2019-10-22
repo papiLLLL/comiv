@@ -6,3 +6,7 @@
 
 # RSpec
 /.rspec_status
+
+# Comiv
+/lib/.comiv/
+/lib/stored/
