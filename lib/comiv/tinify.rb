@@ -1,6 +1,6 @@
 require "tinify"
 
-module Tinify
+module Comiv::Tinify
   Tinify.key = "XXXXX"
   COMPRESS_DIR = "compress"
 

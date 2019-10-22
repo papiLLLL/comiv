@@ -1,4 +1,4 @@
-module FFmpeg
+module Comiv::FFmpeg
   VCODEC = "libx264"
   ACODEC = "aac"
   BITRATE = "2500k"
