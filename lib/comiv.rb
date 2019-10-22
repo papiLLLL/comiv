@@ -1,11 +1,11 @@
-require "compv/version"
-require "compv/ffmpeg"
-require "compv/tinify"
+require "comiv/version"
+require "comiv/ffmpeg"
+require "comiv/tinify"
 
 include Tinify
 include FFmpeg
 
-module Compv
+module Comiv
   PATH = "#{__dir__}/test"
   IMAGE_EXTENSION = "jpg"
   VIDEO_EXTENSION = "mp4"
@@ -33,7 +33,7 @@ module Compv
       Dir.exist?(PATH)
     end
 
-    def start
+    def run(ARGV)
       puts "Begin comiv."
       unless path_exist?
         puts "Not exist directory."

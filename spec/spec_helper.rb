@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "compv"
+require "comiv"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -11,4 +11,7 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  # Require lib directory
+  Dir[File.join(File.dirname(__FILE__), "../lib/**/*.rb")].each { |f| require f }
 end

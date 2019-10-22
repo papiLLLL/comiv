@@ -1,5 +1,5 @@
-# ComPV
-Compress photo and video.
+# ComIV
+Compress image and video.
 
 ## Memo(after delete)
 following is functions.
@@ -14,14 +14,8 @@ following is functions.
 - Tinify API key
 
 ## Install
-```
-bundle install --path vendor/bundle
-```
 
 ## Usage
-```
-ruby compv.rb PATH
-```
 
 ## Licence
 [MIT License](https://github.com/yuitoku/compv/blob/master/LICENSE.txt) @ Yuitoku
