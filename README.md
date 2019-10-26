@@ -1,12 +1,11 @@
 # ComIV
-Compress image and video.
+Compress image and video. 
+Use FFmpeg and Tinify API.
 
 ## Memo(after delete)
 following is functions.
-- parse
-- directory path
-- docpt
-- add key
+- exception
+- test
 - multi extension
 
 ## Requirement
@@ -14,8 +13,13 @@ following is functions.
 - Tinify API key
 
 ## Install
+```
+gem install comiv
+```
 
 ## Usage
+```
+```
 
 ## Licence
 [MIT License](https://github.com/yuitoku/compv/blob/master/LICENSE.txt) @ Yuitoku

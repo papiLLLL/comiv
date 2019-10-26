@@ -67,12 +67,14 @@ module Comiv
     def add_key(value)
       config_exist?
       write_config(KEY, value)
+      reset_count
       puts "Add tinify api key."
     end
 
     def delete_key
       config_exist?
       write_config(KEY)
+      reset_count
       puts "Delete tinify api key."
     end
 
@@ -91,6 +93,10 @@ module Comiv
 
     def write_config(key, replacement = "nil")
       File.write(CONFIG_FILE, File.read(CONFIG_FILE).gsub(/#{key}:.*/, "#{key}: #{replacement}"))
+    end
+
+    def reset_count
+      File.write(CONFIG_FILE, File.read(CONFIG_FILE).gsub(/#{COMPRESSION_COUNT}:.*/, "#{COMPRESSION_COUNT}: 0"))
     end
 
     def load_config

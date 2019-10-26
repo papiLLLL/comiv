@@ -16,7 +16,7 @@ Options:
   config          Set comiv configuration.
   --add-key KEY   Add tinify api key.
   --delete-key    Delete tinify api key.
-  --show-count    Show compresstion count this month.
+  --show-count    Show compresstion count this month. however, it needs to be executed once.
   -h --help       Show help. 
   -v --version    Show version.
 DOCOPT
