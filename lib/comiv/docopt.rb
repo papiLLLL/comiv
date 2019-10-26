@@ -13,7 +13,6 @@ Usage:
 
 Options:
   init            Create .comiv and stored directory.
-  delete          Delete .comiv and stored directory.
   run             Compress image and video files in stored directory.
   config          Set comiv configuration.
   --add-key KEY   Add tinify api key.

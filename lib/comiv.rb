@@ -1,4 +1,5 @@
 require "comiv/version"
+require "comiv/config"
 require "comiv/docopt"
 require "comiv/ffmpeg"
 require "comiv/tinify"
@@ -6,7 +7,7 @@ require "comiv/tinify"
 module Comiv
   CONFIG_DIRECTORY = ".comiv"
   STORED_DIRECTORY = "stored"
-  CONFIG = "#{CONFIG_DIRECTORY}/config"
+  CONFIG_FILE = "#{CONFIG_DIRECTORY}/config"
   PATH = "#{__dir__}/test"
   IMAGE_EXTENSION = "jpg"
   VIDEO_EXTENSION = "mp4"
@@ -23,7 +24,7 @@ module Comiv
     end
 
     def check_command(args)
-      command = args.find{ |k, v| v }.first
+      command = args.find{ |key, value| value }.first
       command == "config" ? Comiv.send(command, args) : Comiv.send(command)
     end
 
@@ -32,32 +33,60 @@ module Comiv
       create_config
     end
 
-    def delete
-    end
-
     def run
     end
 
     def config(*options)
+      options.each do |key, value|
+        case key
+        when "--add-key" then add_key(value)
+        when "--delete-key" then delete_key
+        end
+      end
     end
 
     def create_directory
       [CONFIG_DIRECTORY, STORED_DIRECTORY].each do |dir|
         if File.exist?(dir)
-          puts "Already #{dir} directory."
+          puts "Already #{dir}/"
         else
           Dir.mkdir(dir)
-          puts "Create #{dir} directory."
+          puts "Create #{dir}/"
         end
       end
     end
 
     def create_config
-      if File.exist?(CONFIG)
-        puts "Already #{CONFIG}."
+      if File.exist?(CONFIG_FILE)
+        puts "Already #{CONFIG_FILE}"
       else
-        File.open("#{CONFIG_DIRECTORY}/config", "w").close()
-        puts "Create #{CONFIG}."
+        File.open("#{CONFIG_DIRECTORY}/config", "w") do |f|
+          f.puts(Comiv::CONFIG)
+          puts "Create #{CONFIG_FILE}"
+        end
+      end
+    end
+
+    def add_key(value)
+      if File.exist?(CONFIG_FILE)
+        puts "Nothing #{CONFIG_FILE}. please `comiv init` command."
+        exit(0)
+      end
+
+      File.open("#{CONFIG_DIRECTORY}/config", "a") do |f|
+        f.gsub!(/key:.*/, "key: #{value}")
+        puts "Add tinify api key."
+      end
+    end
+
+    def delete_key
+      if File.exist?(CONFIG_FILE)
+        puts "Nothing #{CONFIG_FILE}. please `comiv init` command."
+        exit(0)
+      end
+
+      File.open("#{CONFIG_DIRECTORY}/config", "a") do |f|
+        f.gsub!(/key:.*/, "key: [Tinify API Key]")
       end
     end
 
