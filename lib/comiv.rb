@@ -39,6 +39,7 @@ module Comiv
         case key
         when "--add-key" then add_key(value) if value
         when "--delete-key" then delete_key if value
+        when "--show-count" then show_count if value
         end
       end
     end
@@ -65,14 +66,20 @@ module Comiv
 
     def add_key(value)
       config_exist?
-      write_config(value)
+      write_config(KEY, value)
       puts "Add tinify api key."
     end
 
     def delete_key
       config_exist?
-      write_config
+      write_config(KEY)
       puts "Delete tinify api key."
+    end
+
+    def show_count
+      config_exist?
+      compression_count = load_config.fetch(COMPRESSION_COUNT)
+      puts "Compression count is #{compression_count}"
     end
 
     def config_exist?
@@ -82,37 +89,40 @@ module Comiv
       end
     end
 
-    def write_config(replacement = "nil")
-      File.write(CONFIG_FILE, File.read(CONFIG_FILE).gsub(/key:.*/, "key: #{replacement}"))
+    def write_config(key, replacement = "nil")
+      File.write(CONFIG_FILE, File.read(CONFIG_FILE).gsub(/#{key}:.*/, "#{key}: #{replacement}"))
     end
 
     def load_config
-      YAML.load_file(CONFIG_FILE).fetch("key")
+      YAML.load_file(CONFIG_FILE)
     end
 
-    def find_image(key)
-      count = 1
+    def find_image(config)
       puts "Checking image..."
-      Dir.glob("#{STORED_DIRECTORY}/*.#{IMAGE_EXTENSION}") do |image|
+      images = Dir.glob("#{STORED_DIRECTORY}/*.#{IMAGE_EXTENSION}")
+      images.each.with_index(1) do |image, index|
         puts "Nothing image." if image.nil? 
-        puts "#{count}: #{image}"
-        Comiv::Tinify.compress_image(image, key)
-        count += 1
+        puts "#{index}: #{image}"
+        index == images.size ?
+          write_config(COMPRESSION_COUNT, Comiv::Tinify.compress_image(image, config["key"])) :
+          Comiv::Tinify.compress_image(image, config["key"])
       end
 
+      show_count
       puts "Completed."
     end
 
     def find_video
-      count = 1
       puts "Checking video..."
-      Dir.glob("#{STORED_DIRECTORY}/*.#{VIDEO_EXTENSION}") do |video|
+      videos = Dir.glob("#{STORED_DIRECTORY}/*.#{VIDEO_EXTENSION}")
+      videos.each.with_index(1) do |video, index|
         puts "Nothind video." if video.nil?
-        puts "#{count}: #{video}"
+        puts "#{index}: #{video}"
         Comiv::FFmpeg.compress_video(video)
-        count += 1
       end
 
+      File.delete("ffmpeg2pass-0.log")
+      File.delete("ffmpeg2pass-0.log.mbtree")
       puts "Complted."
     end
   end

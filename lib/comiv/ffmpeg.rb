@@ -10,6 +10,6 @@ module Comiv::FFmpeg
     directory = File.dirname(video)
     file = File.basename(video)
     `ffmpeg -i #{video} -c:v #{VCODEC} -an -pass 1 -f mp4 -loglevel error -y #{NULL}`
-    `ffmpeg -i #{video} -c:v #{VCODEC} -c:a #{ACODEC} -pass 2 -loglevel error -b:v #{BITRATE} #{directory}/#{Comiv::COMPRESS_DIRECTORY}/#{file}`
+    `ffmpeg -i #{video} -c:v #{VCODEC} -c:a #{ACODEC} -pass 2 -loglevel error -b:v #{BITRATE} -y #{directory}/#{Comiv::COMPRESS_DIRECTORY}/#{file}`
   end
 end
