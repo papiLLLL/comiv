@@ -1,3 +1,5 @@
+require "yaml"
+
 require "comiv/version"
 require "comiv/config"
 require "comiv/docopt"
@@ -5,13 +7,6 @@ require "comiv/ffmpeg"
 require "comiv/tinify"
 
 module Comiv
-  CONFIG_DIRECTORY = ".comiv"
-  STORED_DIRECTORY = "stored"
-  CONFIG_FILE = "#{CONFIG_DIRECTORY}/config"
-  PATH = "#{__dir__}/test"
-  IMAGE_EXTENSION = "jpg"
-  VIDEO_EXTENSION = "mp4"
-
   class << self
     def check_argument
       args = Comiv::Docopt.docopt
@@ -34,24 +29,27 @@ module Comiv
     end
 
     def run
+      config_exist?
+      find_image(load_config)
+      find_video
     end
 
-    def config(*options)
+    def config(options)
       options.each do |key, value|
         case key
-        when "--add-key" then add_key(value)
-        when "--delete-key" then delete_key
+        when "--add-key" then add_key(value) if value
+        when "--delete-key" then delete_key if value
         end
       end
     end
 
     def create_directory
-      [CONFIG_DIRECTORY, STORED_DIRECTORY].each do |dir|
+      DIRECTORIES.each do |dir|
         if File.exist?(dir)
-          puts "Already #{dir}/"
+          puts "Already #{dir}"
         else
           Dir.mkdir(dir)
-          puts "Create #{dir}/"
+          puts "Create #{dir}"
         end
       end
     end
@@ -60,65 +58,62 @@ module Comiv
       if File.exist?(CONFIG_FILE)
         puts "Already #{CONFIG_FILE}"
       else
-        File.open("#{CONFIG_DIRECTORY}/config", "w") do |f|
-          f.puts(Comiv::CONFIG)
-          puts "Create #{CONFIG_FILE}"
-        end
+        File.write(CONFIG_FILE, CONFIG)
+        puts "Create #{CONFIG_FILE}"
       end
     end
 
     def add_key(value)
-      if File.exist?(CONFIG_FILE)
-        puts "Nothing #{CONFIG_FILE}. please `comiv init` command."
-        exit(0)
-      end
-
-      File.open("#{CONFIG_DIRECTORY}/config", "a") do |f|
-        f.gsub!(/key:.*/, "key: #{value}")
-        puts "Add tinify api key."
-      end
+      config_exist?
+      write_config(value)
+      puts "Add tinify api key."
     end
 
     def delete_key
-      if File.exist?(CONFIG_FILE)
+      config_exist?
+      write_config
+      puts "Delete tinify api key."
+    end
+
+    def config_exist?
+      unless File.exist?(CONFIG_FILE)
         puts "Nothing #{CONFIG_FILE}. please `comiv init` command."
         exit(0)
       end
+    end
 
-      File.open("#{CONFIG_DIRECTORY}/config", "a") do |f|
-        f.gsub!(/key:.*/, "key: [Tinify API Key]")
+    def write_config(replacement = "nil")
+      File.write(CONFIG_FILE, File.read(CONFIG_FILE).gsub(/key:.*/, "key: #{replacement}"))
+    end
+
+    def load_config
+      YAML.load_file(CONFIG_FILE).fetch("key")
+    end
+
+    def find_image(key)
+      count = 1
+      puts "Checking image..."
+      Dir.glob("#{STORED_DIRECTORY}/*.#{IMAGE_EXTENSION}") do |image|
+        puts "Nothing image." if image.nil? 
+        puts "#{count}: #{image}"
+        Comiv::Tinify.compress_image(image, key)
+        count += 1
       end
+
+      puts "Completed."
     end
 
     def find_video
-      Dir.glob("#{PATH}/*.#{VIDEO_EXTENSION}") do |video|
-        puts video
+      count = 1
+      puts "Checking video..."
+      Dir.glob("#{STORED_DIRECTORY}/*.#{VIDEO_EXTENSION}") do |video|
+        puts "Nothind video." if video.nil?
+        puts "#{count}: #{video}"
         Comiv::FFmpeg.compress_video(video)
+        count += 1
       end
-    end
 
-    def find_image
-      Dir.glob("#{PATH}/*.#{IMAGE_EXTENSION}") do |image|
-        puts image
-        Comiv::Tinify.compress_image(image)
-      end
-    end
-
-    def path_exist?
-      Dir.exist?(PATH)
-    end
-
-    def aaaa
-      check_argument
-      puts "Begin comiv."
-      unless path_exist?
-        puts "Not exist directory."
-        exit(0)
-      end
-      
-      #find_image
-      find_video
-      puts "End comiv."
+      puts "Complted."
     end
   end
 end

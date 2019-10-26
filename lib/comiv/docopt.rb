@@ -5,7 +5,6 @@ module Comiv::Docopt
     doc = <<DOCOPT
 Usage:
   comiv init
-  comiv delete
   comiv run
   comiv config (--add-key KEY | --delete-key)
   comiv -h | --help

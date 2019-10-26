@@ -5,7 +5,7 @@ module Comiv::FFmpeg
   NULL = "/dev/null"
   COMPRESS_DIR = "compress"
 
-  def compress_video(video)
+  def self.compress_video(video)
     directory = File.dirname(video)
     file = File.basename(video)
     `ffmpeg -i #{video} -c:v #{VCODEC} -an -pass 1 -f mp4 -loglevel error -y #{NULL}`

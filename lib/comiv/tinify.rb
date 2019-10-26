@@ -1,13 +1,14 @@
 require "tinify"
 
 module Comiv::Tinify
-  Tinify.key = "XXXXX"
-  COMPRESS_DIR = "compress"
+  Tinify.key = nil
+  COMPRESS_DIRECTORY = "compress"
 
-  def compress_image(image)
+  def self.compress_image(image, key)
+    Tinify.key = key
     directory = File.dirname(image)
     file = File.basename(image)
     source = Tinify.from_file("#{image}")
-    source.to_file("#{directory}/#{COMPRESS_DIR}/#{file}")
+    source.to_file("#{directory}/#{COMPRESS_DIRECTORY}/#{file}")
   end
 end

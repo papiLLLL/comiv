@@ -10,3 +10,6 @@
 # Comiv
 /lib/.comiv/
 /lib/stored/
+
+# ffmpeg
+ffmpeg2pass*
