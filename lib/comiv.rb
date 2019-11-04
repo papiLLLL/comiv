@@ -30,6 +30,7 @@ module Comiv
 
     def run
       config_exist?
+      compress_exist?
       find_image(load_config)
       find_video
     end
@@ -91,6 +92,13 @@ module Comiv
       end
     end
 
+    def compress_exist?
+      unless File.exist?("#{STORED_DIRECTORY}/#{COMPRESS_DIRECTORY}")
+        puts "Nothing #{STORED_DIRECTORY}/#{COMPRESS_DIRECTORY}. please `comiv init` command."
+        exit(0)
+      end
+    end      
+
     def write_config(key, replacement = "nil")
       File.write(CONFIG_FILE, File.read(CONFIG_FILE).gsub(/#{key}:.*/, "#{key}: #{replacement}"))
     end
@@ -133,5 +141,3 @@ module Comiv
     end
   end
 end
-
-Comiv.check_argument

@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 require "comiv"
 
-Comiv.run(ARGV)
+Comiv.check_argument

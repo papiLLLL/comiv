@@ -2,14 +2,14 @@
 /.bundle/
 /Gemfile.lock
 /vendor/
-/*.gem/
+/*.gem
 
 # RSpec
 /.rspec_status
 
 # Comiv
-/lib/.comiv/
-/lib/stored/
+/.comiv/
+/stored/
 
 # ffmpeg
 ffmpeg2pass*
