@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["exrecord160@gmail.com"]
 
   spec.summary       = %q{Compress photo and video.}
-  spec.description   = %q{Use ffmpeg and tinify API for compress.}
+  spec.description   = %q{Compress photo and video. Use ffmpeg and tinify API for compress.}
   spec.homepage      = "https://github.com/yuitoku/comiv"
   spec.license       = "MIT"
 
